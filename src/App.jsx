@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react';
-import Header from './components/Header';
-import Filters from './components/Filters';
-import Results from './components/Results';
+import ElegantHeader from './components/ElegantHeader';
+import Hero from './components/Hero';
+import FilterPanel from './components/FilterPanel';
+import ResultsList from './components/ResultsList';
 import InfoBar from './components/InfoBar';
 
-// Sample local dataset to demonstrate filtering UI
 const SAMPLE_DATA = [
   {
     id: '1',
@@ -48,52 +48,49 @@ const SAMPLE_DATA = [
   },
 ];
 
-function App() {
+export default function App() {
   const [filters, setFilters] = useState({});
   const [loading, setLoading] = useState(false);
 
   const filtered = useMemo(() => {
     const { agency, contractType, vehicle, setAside } = filters;
-    return SAMPLE_DATA.filter(op => (
+    return SAMPLE_DATA.filter((op) =>
       (!agency || op.agency === agency) &&
       (!contractType || op.contractType === contractType) &&
       (!vehicle || op.vehicle === vehicle) &&
       (!setAside || op.setAside === setAside)
-    ));
+    );
   }, [filters]);
 
   function handleFilterChange(next) {
     setLoading(true);
     setFilters(next);
-    // Simulate request latency for nicer UX
-    setTimeout(() => setLoading(false), 400);
+    setTimeout(() => setLoading(false), 350);
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-sky-50 to-emerald-50 text-gray-900">
-      <Header />
+    <div className="min-h-screen bg-white text-gray-900">
+      <ElegantHeader />
+      <Hero />
 
-      <main className="mx-auto max-w-6xl px-4 py-8 space-y-6">
+      <main className="mx-auto max-w-7xl px-4 py-10 space-y-8">
         <InfoBar />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-          <div className="lg:col-span-1 space-y-4">
-            <Filters onChange={handleFilterChange} />
+          <div className="lg:col-span-1">
+            <FilterPanel onChange={handleFilterChange} />
           </div>
-
           <div className="lg:col-span-2">
-            <Results items={filtered} loading={loading} />
+            <ResultsList items={filtered} loading={loading} />
           </div>
         </div>
-
-        <section className="mt-8 text-center text-sm text-gray-500">
-          <p>
-            Coming next: secure authentication and a backend connector to pull live opportunities from GovWin based on your filters.
-          </p>
-        </section>
       </main>
+
+      <footer className="py-10">
+        <div className="mx-auto max-w-7xl px-4 text-center text-sm text-gray-500">
+          <p>Crafted for elegance and clarity. Ready for secure GovWin integration when you are.</p>
+        </div>
+      </footer>
     </div>
   );
 }
-
-export default App;
